@@ -1,7 +1,9 @@
-POST http://localhost:3001/api/notes
+POST http://localhost:3001/api/products
 content-type: application/json
 
-{
-  "content": "Created using REST extension.",
-  "important": true
-}
+  {
+    "name": "duck",
+    "category": "frozen",
+    "quantity": 6,
+    "id": 6
+  }
