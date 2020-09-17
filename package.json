@@ -1,0 +1,19 @@
+{
+  "name": "fsopen-express",
+  "version": "1.0.0",
+  "description": "Basic express server for FSOpen 202",
+  "main": "node index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
