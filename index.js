@@ -6,10 +6,10 @@ const cors = require('cors')
 const app = express();
 
 // Define middleware
-app.use(cors())
+app.use(cors()) // TODO all origins currently accepted
 app.use(express.json());
-app.use(express.static('build'))
-app.use(morgan('tiny'))
+app.use(express.static('build')) // serve static files
+app.use(morgan('tiny')) // log all actions
 
 let products = [
     {
