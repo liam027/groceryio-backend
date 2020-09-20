@@ -1,3 +1,4 @@
+require('dotenv').config()
 const { response } = require('express')
 const express = require('express');
 const morgan = require('morgan')
@@ -5,57 +6,39 @@ const cors = require('cors')
 
 const app = express();
 
+// Import Models
+const Product = require('./models/product')
+
 // Define middleware
 app.use(cors()) // TODO all origins currently accepted
 app.use(express.json());
 app.use(express.static('build')) // serve static files
 app.use(morgan('tiny')) // log all actions
 
-let products = [
-    {
-      "id": 1,
-      "name": "turkey",
-      "category": "produce",
-      "quantity": 0,
-    },
-    {
-      "id": 2,
-      "name": "rice",
-      "category": "produce",
-      "quantity": 0
-    },
-    {
-      "id": 3,
-      "name": "vinegar",
-      "category": "produce",
-      "quantity": 0
-    }
-  ]
 
 
-app.get('/', (req, res) => {
-  res.send('<h1>Hello World!</h1>');
+// Routes
+app.get('/api/products', (request, response) => {
+  Product.find({}).then(products => {
+    response.json(products)
+  })
 })
 
-app.get('/api/products', (req, res) => {
-  res.json(products);
-})
-
-app.get('/api/products/:id', (req, res) => {
-  const id = Number(req.params.id);
+app.get('/api/products/:id', (request, response) => {
+  const id = Number(request.params.id);
   const product = products.find(product => product.id === id);
   if (product) {
-    res.json(product)
+    response.json(product)
   } else {
-    res.status(404).end()
+    response.status(404).end()
   }
 })
 
-app.post('/api/products', (req, res) => {
-  const body = req.body
+app.post('/api/products', (request, response) => {
+  const body = request.body
 
   if (!body) {
-    return res.status(400).json({
+    return response.status(400).json({
       error: 'content missing'
     })
   }
@@ -72,14 +55,14 @@ app.post('/api/products', (req, res) => {
 
   console.log("Added new product: ", product);
 
-  res.json(product)
+  response.json(product)
 })
 
-app.delete('/api/products/:id', (req, res) => {
-  const id = Number(req.params.id)
+app.delete('/api/products/:id', (request, response) => {
+  const id = Number(request.params.id)
   products = products.filter(product => product.id !== id)
   console.log("Deleted product with ID: ", id);
-  res.status(204).end()
+  response.status(204).end()
 })
 
 const unknownEndpoint = (request, response) => {
@@ -95,8 +78,7 @@ const generateId = () => {
   return maxId + 1
 }
 
-
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
