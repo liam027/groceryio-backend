@@ -18,12 +18,14 @@ app.use(morgan('tiny')) // log all actions
 
 
 // Routes
+// INDEX
 app.get('/api/products', (request, response) => {
   Product.find({}).then(products => {
     response.json(products)
   })
 })
 
+// SHOW
 app.get('/api/products/:id', (request, response) => {
   const id = Number(request.params.id);
   const product = products.find(product => product.id === id);
@@ -34,6 +36,7 @@ app.get('/api/products/:id', (request, response) => {
   }
 })
 
+// CREATE
 app.post('/api/products', (request, response) => {
   const body = request.body
 
@@ -58,6 +61,7 @@ app.post('/api/products', (request, response) => {
   response.json(product)
 })
 
+// DESTROY
 app.delete('/api/products/:id', (request, response) => {
   const id = Number(request.params.id)
   products = products.filter(product => product.id !== id)
@@ -68,7 +72,6 @@ app.delete('/api/products/:id', (request, response) => {
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
 }
-
 app.use(unknownEndpoint)
 
 const generateId = () => {
