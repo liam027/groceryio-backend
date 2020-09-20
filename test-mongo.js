@@ -1,8 +1,6 @@
 const mongoose = require('mongoose')
 
-const url =
-  `mongodb+srv://lee:${process.env.GROCERYIO_MONGODB_PWD}@groceryio-cluster.i0ofh.mongodb.net/groceryio-products?retryWrites=true&w=majority`
-
+const url = process.env.MONGODB_URI
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const productSchema = new mongoose.Schema({
