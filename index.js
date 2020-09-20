@@ -27,46 +27,44 @@ app.get('/api/products', (request, response) => {
 
 // SHOW
 app.get('/api/products/:id', (request, response) => {
-  const id = Number(request.params.id);
-  const product = products.find(product => product.id === id);
-  if (product) {
+  Product.findById(request.params.id).then(product => {
     response.json(product)
-  } else {
-    response.status(404).end()
-  }
+  })
 })
+
 
 // CREATE
 app.post('/api/products', (request, response) => {
-  const body = request.body
+  const content = request.body
 
-  if (!body) {
+  if (!content) {
     return response.status(400).json({
       error: 'content missing'
     })
   }
 
-  const product = {
-    id: generateId(),
-    name: body.name,
-    category: body.category || undefined,
-    quantity: body.quantity,
+  const product = new Product({
+    name: content.name,
+    category: content.category || undefined,
+    quantity: content.quantity,
     created_at: new Date()
-  }
+  })
 
-  products = products.concat(product)
-
-  console.log("Added new product: ", product);
-
-  response.json(product)
+  product.save().then(savedProduct => {
+    console.log("Added new product: ", product);
+    response.json(savedProduct)
+  })
 })
 
 // DESTROY
 app.delete('/api/products/:id', (request, response) => {
-  const id = Number(request.params.id)
-  products = products.filter(product => product.id !== id)
-  console.log("Deleted product with ID: ", id);
-  response.status(204).end()
+  Product.deleteOne({ _id: request.params.id }, function(err, result) {
+    if (err) {
+      response.send(err);
+    } else {
+      response.send(result);
+    }
+  });
 })
 
 const unknownEndpoint = (request, response) => {
