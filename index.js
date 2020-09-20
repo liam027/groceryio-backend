@@ -3,6 +3,8 @@ const { response } = require('express')
 const express = require('express');
 const morgan = require('morgan')
 const cors = require('cors')
+const errorHandler = require('./errorHandler')
+const endpointHandler = require('./endpointHandler')
 
 const app = express();
 
@@ -26,10 +28,17 @@ app.get('/api/products', (request, response) => {
 })
 
 // SHOW
-app.get('/api/products/:id', (request, response) => {
-  Product.findById(request.params.id).then(product => {
-    response.json(product)
-  })
+app.get('/api/products/:id', (request, response, next) => {
+  Product.findById(request.params.id)
+    .then(product => {
+      if (product) {
+        response.json(product)
+      }
+      else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => { next(error) })
 })
 
 
@@ -58,26 +67,15 @@ app.post('/api/products', (request, response) => {
 
 // DESTROY
 app.delete('/api/products/:id', (request, response) => {
-  Product.deleteOne({ _id: request.params.id }, function(err, result) {
-    if (err) {
-      response.send(err);
-    } else {
-      response.send(result);
-    }
-  });
+  Product.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
 })
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
-app.use(unknownEndpoint)
-
-const generateId = () => {
-  const maxId = products.length > 0
-    ? Math.max(...products.map(n => n.id))
-    : 0
-  return maxId + 1
-}
+app.use(endpointHandler)
+app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
