@@ -14,97 +14,118 @@ beforeEach(async () => {
   await Promise.all(promiseArray)
 })
 
-test('products are returned as json', async () => {
-  await api
-    .get('/api/products')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+describe('when there are initially some products saved', () => {
+
+  test('products are returned as json', async () => {
+    await api
+      .get('/api/products')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+  })
+
+  test('all products are returned', async () => {
+    const response = await api.get('/api/products')
+
+    expect(response.body).toHaveLength(helper.initialProducts.length)
+  })
+
+  test('a specific product is within the returned products', async () => {
+    const response = await api.get('/api/products')
+
+    const names = response.body.map(product => product.name)
+
+    expect(names).toContain('rice')
+  })
 })
 
-test('all products are returned', async () => {
-  const response = await api.get('/api/products')
+describe('viewing a specific note', () => {
 
-  expect(response.body).toHaveLength(helper.initialProducts.length)
+  test('a valid product ID can be viewed', async () => {
+    const productsAtStart = await helper.productsInDb()
+
+    const productToView = productsAtStart[0]
+
+    const resultProduct = await api
+      .get(`/api/products/${productToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const processedProductToView = JSON.parse(JSON.stringify(productToView))
+
+    expect(resultProduct.body).toEqual(processedProductToView)
+  })
+
+  test('fails with statuscode 404 if product does not exist', async () => {
+    const validNonexistingId = await helper.nonExistingId()
+
+    await api
+      .get(`/api/notes/${validNonexistingId}`)
+      .expect(404)
+  })
 })
 
-test('a specific product is within the returned products', async () => {
-  const response = await api.get('/api/products')
+describe('addition of a new note', () => {
 
-  const names = response.body.map(product => product.name)
+  test('a valid product can be added', async () => {
+    const testProduct = {
+      name: 'async',
+      category: 'frozen',
+      quantity: 999
+    }
 
-  expect(names).toContain('rice')
+    await api
+      .post('/api/products')
+      .send(testProduct)
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    // Product has been added
+    const productsAtEnd = await helper.productsInDb()
+    expect(productsAtEnd).toHaveLength(helper.initialProducts.length + 1)
+
+    // The new product information is present
+    const contents = productsAtEnd.map(product => product.name)
+    expect(contents).toContain('async')
+  })
+
+  test('product without name is not added', async () => {
+    const testProduct = {
+      name: '',
+      category: 'frozen',
+      quantity: 999
+    }
+
+    await api
+      .post('/api/products')
+      .send(testProduct)
+      .expect(400)
+
+    const productsAtEnd = await helper.productsInDb()
+    expect(productsAtEnd).toHaveLength(helper.initialProducts.length)
+  })
+
 })
 
-test('a valid product can be added', async () => {
-  const testProduct = {
-    name: 'async',
-    category: 'frozen',
-    quantity: 999
-  }
 
-  await api
-    .post('/api/products')
-    .send(testProduct)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
+describe('deletion of a note', () => {
+  test('a product can be deleted', async () => {
+    const productsAtStart = await helper.productsInDb()
+    const productToDelete = productsAtStart[0]
 
-  // Product has been added
-  const productsAtEnd = await helper.productsInDb()
-  expect(productsAtEnd).toHaveLength(helper.initialProducts.length + 1)
+    await api
+      .delete(`/api/products/${productToDelete.id}`)
+      .expect(204)
 
-  // The new product information is present
-  const contents = productsAtEnd.map(product => product.name)
-  expect(contents).toContain('async')
-})
+    const productsAtEnd = await helper.productsInDb()
 
-test('product without name is not added', async () => {
-  const testProduct = {
-    name: '',
-    category: 'frozen',
-    quantity: 999
-  }
+    expect(productsAtEnd).toHaveLength(
+      helper.initialProducts.length - 1
+    )
 
-  await api
-    .post('/api/products')
-    .send(testProduct)
-    .expect(400)
+    const contents = productsAtEnd.map(product => product.name)
 
-  const productsAtEnd = await helper.productsInDb()
-  expect(productsAtEnd).toHaveLength(helper.initialProducts.length)
-})
-
-test('a specific product can be viewed', async () => {
-  const productsAtStart = await helper.productsInDb()
-
-  const productToView = productsAtStart[0]
-
-  const resultProduct = await api
-    .get(`/api/products/${productToView.id}`)
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-
-  const processedProductToView = JSON.parse(JSON.stringify(productToView))
-
-  expect(resultProduct.body).toEqual(processedProductToView)
-})
-
-test('a product can be deleted', async () => {
-  const productsAtStart = await helper.productsInDb()
-  const productToDelete = productsAtStart[0]
-
-  await api
-    .delete(`/api/products/${productToDelete.id}`)
-    .expect(204)
-
-  const productsAtEnd = await helper.productsInDb()
-
-  expect(productsAtEnd).toHaveLength(
-    helper.initialProducts.length - 1
-  )
-
-  const contents = productsAtEnd.map(product => product.name)
-
-  expect(contents).not.toContain(productToDelete.name)
+    expect(contents).not.toContain(productToDelete.name)
+  })
 })
 
 afterAll(() => {
