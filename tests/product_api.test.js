@@ -77,6 +77,40 @@ test('product without name is not added', async () => {
   expect(productsAtEnd).toHaveLength(helper.initialProducts.length)
 })
 
+test('a specific product can be viewed', async () => {
+  const productsAtStart = await helper.productsInDb()
+
+  const productToView = productsAtStart[0]
+
+  const resultProduct = await api
+    .get(`/api/products/${productToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const processedProductToView = JSON.parse(JSON.stringify(productToView))
+
+  expect(resultProduct.body).toEqual(processedProductToView)
+})
+
+test('a product can be deleted', async () => {
+  const productsAtStart = await helper.productsInDb()
+  const productToDelete = productsAtStart[0]
+
+  await api
+    .delete(`/api/products/${productToDelete.id}`)
+    .expect(204)
+
+  const productsAtEnd = await helper.productsInDb()
+
+  expect(productsAtEnd).toHaveLength(
+    helper.initialProducts.length - 1
+  )
+
+  const contents = productsAtEnd.map(product => product.name)
+
+  expect(contents).not.toContain(productToDelete.name)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
