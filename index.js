@@ -4,6 +4,7 @@ const morgan = require('morgan')
 const cors = require('cors')
 const errorHandler = require('./errorHandler')
 const endpointHandler = require('./endpointHandler')
+const logger = require('./utils/logger')
 
 const app = express()
 
@@ -54,7 +55,7 @@ app.post('/api/products', (request, response, next) => {
 
   product.save()
     .then(savedProduct => {
-      console.log('Added new product: ', product)
+      logger.info('Added new product: ', product)
       return savedProduct.toJSON()
     })
     .then(savedAndFormattedProduct => {
@@ -77,7 +78,7 @@ app.put('/api/products/:id', (request, response, next) => {
   const opts = { runValidators: true, new: true, context: 'query' }
   Product.findByIdAndUpdate(request.params.id, note, opts)
     .then(result => {
-      console.log('Record successfully updated. ID: ', result)
+      logger.info('Record successfully updated. ID: ', result)
       response.json(result)
     })
     .catch(error => next(error))
@@ -97,5 +98,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`)
+  logger.info(`Server running on port ${PORT}`)
 })
