@@ -8,14 +8,10 @@ const Product = require('../models/product')
 beforeEach(async () => {
   await Product.deleteMany({})
 
-  let productObject = new Product(helper.initialProducts[0])
-  await productObject.save()
-
-  productObject = new Product(helper.initialProducts[1])
-  await productObject.save()
-
-  productObject = new Product(helper.initialProducts[2])
-  await productObject.save()
+  const productObjects = helper.initialProducts
+    .map(product => new Product(product))
+  const promiseArray = productObjects.map(product => product.save())
+  await Promise.all(promiseArray)
 })
 
 test('products are returned as json', async () => {
