@@ -43,14 +43,8 @@ app.get('/api/products/:id', (request, response, next) => {
 
 
 // CREATE
-app.post('/api/products', (request, response) => {
+app.post('/api/products', (request, response, next) => {
   const content = request.body
-
-  if (!content) {
-    return response.status(400).json({
-      error: 'content missing'
-    })
-  }
 
   const product = new Product({
     name: content.name,
@@ -63,6 +57,7 @@ app.post('/api/products', (request, response) => {
     console.log("Added new product: ", product);
     response.json(savedProduct)
   })
+  .catch(error => next(error))
 })
 
 // UPDATE
