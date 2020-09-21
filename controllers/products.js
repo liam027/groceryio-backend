@@ -9,7 +9,7 @@ productsRouter.get('/', async (request, response) => {
 })
 
 // SHOW
-productsRouter.get('/:id', async (request, response, next) => {
+productsRouter.get('/:id', async (request, response) => {
   const product = await Product.findById(request.params.id)
   if (product) {
     response.json(product)
@@ -21,7 +21,7 @@ productsRouter.get('/:id', async (request, response, next) => {
 
 
 // CREATE
-productsRouter.post('/', async (request, response, next) => {
+productsRouter.post('/', async (request, response) => {
   const content = request.body
 
   const product = new Product({
@@ -36,7 +36,7 @@ productsRouter.post('/', async (request, response, next) => {
 })
 
 // UPDATE
-productsRouter.put('/:id', async (request, response, next) => {
+productsRouter.put('/:id', async (request, response) => {
   const content = request.body
 
   const note = {
@@ -53,7 +53,7 @@ productsRouter.put('/:id', async (request, response, next) => {
 })
 
 // DESTROY
-productsRouter.delete('/:id', async (request, response, next) => {
+productsRouter.delete('/:id', async (request, response) => {
   await Product.findByIdAndRemove(request.params.id)
   response.status(204).end()
 })
