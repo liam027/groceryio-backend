@@ -1,19 +1,18 @@
 require('dotenv').config()
-const { response } = require('express')
-const express = require('express');
+const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const errorHandler = require('./errorHandler')
 const endpointHandler = require('./endpointHandler')
 
-const app = express();
+const app = express()
 
 // Import Models
 const Product = require('./models/product')
 
 // Define middleware
 app.use(cors()) // TODO all origins currently accepted
-app.use(express.json());
+app.use(express.json())
 app.use(express.static('build')) // serve static files
 app.use(morgan('tiny')) // log all actions
 
@@ -55,7 +54,7 @@ app.post('/api/products', (request, response, next) => {
 
   product.save()
     .then(savedProduct => {
-      console.log("Added new product: ", product);
+      console.log('Added new product: ', product)
       return savedProduct.toJSON()
     })
     .then(savedAndFormattedProduct => {
@@ -65,7 +64,7 @@ app.post('/api/products', (request, response, next) => {
 })
 
 // UPDATE
-app.put('/api/products/:id', (request, response) => {
+app.put('/api/products/:id', (request, response, next) => {
   const content = request.body
 
   const note = {
@@ -78,16 +77,16 @@ app.put('/api/products/:id', (request, response) => {
   const opts = { runValidators: true, new: true, context: 'query' }
   Product.findByIdAndUpdate(request.params.id, note, opts)
     .then(result => {
-      console.log('Record successfully updated. ID: ', result);
+      console.log('Record successfully updated. ID: ', result)
       response.json(result)
     })
     .catch(error => next(error))
 })
 
 // DESTROY
-app.delete('/api/products/:id', (request, response) => {
+app.delete('/api/products/:id', (request, response, next) => {
   Product.findByIdAndRemove(request.params.id)
-    .then(result => {
+    .then( () => {
       response.status(204).end()
     })
     .catch(error => next(error))
