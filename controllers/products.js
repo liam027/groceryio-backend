@@ -3,14 +3,13 @@ const Product = require('../models/product')
 const logger = require('../utils/logger')
 
 // INDEX
-productsRouter.get('/', (request, response) => {
-  Product.find({}).then(products => {
-    response.json(products)
-  })
+productsRouter.get('/', async (request, response) => {
+  const products = await Product.find({})
+  response.json(products)
 })
 
 // SHOW
-productsRouter.get('/:id', (request, response, next) => {
+productsRouter.get('/:id', async (request, response, next) => {
   Product.findById(request.params.id)
     .then(product => {
       if (product) {
@@ -25,7 +24,7 @@ productsRouter.get('/:id', (request, response, next) => {
 
 
 // CREATE
-productsRouter.post('/', (request, response, next) => {
+productsRouter.post('/', async (request, response, next) => {
   const content = request.body
 
   const product = new Product({
@@ -47,7 +46,7 @@ productsRouter.post('/', (request, response, next) => {
 })
 
 // UPDATE
-productsRouter.put('/:id', (request, response, next) => {
+productsRouter.put('/:id', async (request, response, next) => {
   const content = request.body
 
   const note = {
@@ -67,7 +66,7 @@ productsRouter.put('/:id', (request, response, next) => {
 })
 
 // DESTROY
-productsRouter.delete('/:id', (request, response, next) => {
+productsRouter.delete('/:id', async (request, response, next) => {
   Product.findByIdAndRemove(request.params.id)
     .then( () => {
       response.status(204).end()
