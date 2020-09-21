@@ -65,6 +65,24 @@ app.post('/api/products', (request, response) => {
   })
 })
 
+// UPDATE
+app.put('/api/products/:id', (request, response) => {
+  const content = request.body
+
+  const note = {
+    name: content.name,
+    category: content.category,
+    quantity: content.quantity
+  }
+
+  Product.findByIdAndUpdate(request.params.id, note, { new: true })
+    .then(result => {
+      console.log('Record successfully updated. ID: ', result);
+      response.json(result)
+    })
+    .catch(error => next(error))
+})
+
 // DESTROY
 app.delete('/api/products/:id', (request, response) => {
   Product.findByIdAndRemove(request.params.id)
