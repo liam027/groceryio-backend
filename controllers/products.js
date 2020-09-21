@@ -10,17 +10,12 @@ productsRouter.get('/', async (request, response) => {
 
 // SHOW
 productsRouter.get('/:id', async (request, response, next) => {
-  try{
-    const product = await Product.findById(request.params.id)
-    if (product) {
-      response.json(product)
-    }
-    else {
-      response.status(404).end()
-    }
+  const product = await Product.findById(request.params.id)
+  if (product) {
+    response.json(product)
   }
-  catch(error) {
-    next(error)
+  else {
+    response.status(404).end()
   }
 })
 
@@ -36,13 +31,8 @@ productsRouter.post('/', async (request, response, next) => {
     created_at: new Date()
   })
 
-  try {
-    const savedProduct = await product.save()
-    response.json(savedProduct)
-  }
-  catch(exception) {
-    next(exception)
-  }
+  const savedProduct = await product.save()
+  response.json(savedProduct)
 })
 
 // UPDATE
@@ -57,23 +47,15 @@ productsRouter.put('/:id', async (request, response, next) => {
 
   // enable validations during update, Mongoose default is OFF
   const opts = { runValidators: true, new: true, context: 'query' }
-  Product.findByIdAndUpdate(request.params.id, note, opts)
-    .then(result => {
-      logger.info('Record successfully updated. ID: ', result)
-      response.json(result)
-    })
-    .catch(error => next(error))
+  const result = await Product.findByIdAndUpdate(request.params.id, note, opts)
+  logger.info('Record successfully updated. ID: ', result)
+  response.json(result)
 })
 
 // DESTROY
 productsRouter.delete('/:id', async (request, response, next) => {
-  try{
-    await Product.findByIdAndRemove(request.params.id)
-    response.status(204).end()
-  }
-  catch(error) {
-    next(error)
-  }
+  await Product.findByIdAndRemove(request.params.id)
+  response.status(204).end()
 })
 
 module.exports = productsRouter
