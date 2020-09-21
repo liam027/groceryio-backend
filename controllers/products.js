@@ -10,16 +10,18 @@ productsRouter.get('/', async (request, response) => {
 
 // SHOW
 productsRouter.get('/:id', async (request, response, next) => {
-  Product.findById(request.params.id)
-    .then(product => {
-      if (product) {
-        response.json(product)
-      }
-      else {
-        response.status(404).end()
-      }
-    })
-    .catch(error => { next(error) })
+  try{
+    const product = await Product.findById(request.params.id)
+    if (product) {
+      response.json(product)
+    }
+    else {
+      response.status(404).end()
+    }
+  }
+  catch(error) {
+    next(error)
+  }
 })
 
 
@@ -65,11 +67,13 @@ productsRouter.put('/:id', async (request, response, next) => {
 
 // DESTROY
 productsRouter.delete('/:id', async (request, response, next) => {
-  Product.findByIdAndRemove(request.params.id)
-    .then( () => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
+  try{
+    await Product.findByIdAndRemove(request.params.id)
+    response.status(204).end()
+  }
+  catch(error) {
+    next(error)
+  }
 })
 
 module.exports = productsRouter
