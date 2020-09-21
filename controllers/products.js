@@ -34,15 +34,13 @@ productsRouter.post('/', async (request, response, next) => {
     created_at: new Date()
   })
 
-  product.save()
-    .then(savedProduct => {
-      logger.info('Added new product: ', product)
-      return savedProduct.toJSON()
-    })
-    .then(savedAndFormattedProduct => {
-      response.json(savedAndFormattedProduct)
-    })
-    .catch(error => next(error))
+  try {
+    const savedProduct = await product.save()
+    response.json(savedProduct)
+  }
+  catch(exception) {
+    next(exception)
+  }
 })
 
 // UPDATE
