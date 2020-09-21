@@ -14,10 +14,24 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
   })
 
 const productSchema = new mongoose.Schema({
-  name: String,
-  created_at: Date,
-  category: String,
-  quantity: Number
+  name: {
+    type: String,
+    required: true
+  },
+  created_at: {
+    type: Date,
+    required: true
+  },
+  category: {
+    type: String,
+    required: true,
+    default: "misc"
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    default: 0
+  }
 })
 
 // Transform _id to id and remove MongoDB default _v field
