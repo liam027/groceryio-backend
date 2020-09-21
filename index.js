@@ -53,11 +53,15 @@ app.post('/api/products', (request, response, next) => {
     created_at: new Date()
   })
 
-  product.save().then(savedProduct => {
-    console.log("Added new product: ", product);
-    response.json(savedProduct)
-  })
-  .catch(error => next(error))
+  product.save()
+    .then(savedProduct => {
+      console.log("Added new product: ", product);
+      return savedProduct.toJSON()
+    })
+    .then(savedAndFormattedProduct => {
+      response.json(savedAndFormattedProduct)
+    })
+    .catch(error => next(error))
 })
 
 // UPDATE
