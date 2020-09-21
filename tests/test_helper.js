@@ -22,7 +22,7 @@ const initialProducts = [
 ]
 
 const nonExistingId = async () => {
-  const product = new Product({ content: 'willremovethissoon', date: new Date() })
+  const product = new Product({ name: 'willremovethissoon', created_at: new Date() })
   await product.save()
   await product.remove()
 
