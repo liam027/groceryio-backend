@@ -74,7 +74,9 @@ app.put('/api/products/:id', (request, response) => {
     quantity: content.quantity
   }
 
-  Product.findByIdAndUpdate(request.params.id, note, { new: true })
+  // enable validations during update, Mongoose default is OFF
+  const opts = { runValidators: true, new: true, context: 'query' }
+  Product.findByIdAndUpdate(request.params.id, note, opts)
     .then(result => {
       console.log('Record successfully updated. ID: ', result);
       response.json(result)
