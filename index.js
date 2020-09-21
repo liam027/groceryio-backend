@@ -1,10 +1,10 @@
-require('dotenv').config()
 const express = require('express')
 const morgan = require('morgan')
 const cors = require('cors')
 const errorHandler = require('./errorHandler')
 const endpointHandler = require('./endpointHandler')
 const logger = require('./utils/logger')
+const config = require('./utils/config')
 
 const app = express()
 
@@ -96,7 +96,6 @@ app.delete('/api/products/:id', (request, response, next) => {
 app.use(endpointHandler)
 app.use(errorHandler)
 
-const PORT = process.env.PORT
-app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`)
+app.listen(config.PORT, () => {
+  logger.info(`Server running on port ${config.PORT}`)
 })
