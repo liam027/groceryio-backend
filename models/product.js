@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+var uniqueValidator = require('mongoose-unique-validator')
 
 mongoose.set('useFindAndModify', false)
 
@@ -16,6 +17,7 @@ mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
+    unique: true,
     required: true
   },
   created_at: {
@@ -33,6 +35,7 @@ const productSchema = new mongoose.Schema({
     default: 0
   }
 })
+productSchema.plugin(uniqueValidator)
 
 // Transform _id to id and remove MongoDB default _v field
 productSchema.set('toJSON', {
