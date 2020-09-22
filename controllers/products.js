@@ -1,6 +1,7 @@
+const logger = require('../utils/logger')
 const productsRouter = require('express').Router()
 const Product = require('../models/product')
-const logger = require('../utils/logger')
+const User = require('../models/user')
 
 // INDEX
 productsRouter.get('/', async (request, response) => {
@@ -24,14 +25,22 @@ productsRouter.get('/:id', async (request, response) => {
 productsRouter.post('/', async (request, response) => {
   const content = request.body
 
+  const user = await User.findById(content.userId)
+
+  // Save new product
   const product = new Product({
     name: content.name,
     category: content.category || undefined,
     quantity: content.quantity,
-    created_at: new Date()
+    created_at: new Date(),
+    user: user._id
   })
-
   const savedProduct = await product.save()
+
+  // Save new product ID to user's products
+  user.notes = user.notes.concat(savedProduct._id)
+  await user.save()
+
   response.json(savedProduct)
 })
 
