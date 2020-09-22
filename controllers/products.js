@@ -1,7 +1,15 @@
+const jwt = require('jsonwebtoken')
 const logger = require('../utils/logger')
 const productsRouter = require('express').Router()
 const Product = require('../models/product')
 const User = require('../models/user')
+
+const getTokenFrom = request => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    return authorization.substring(7)
+  }
+}
 
 // INDEX
 productsRouter.get('/', async (request, response) => {
@@ -27,8 +35,13 @@ productsRouter.get('/:id', async (request, response) => {
 // CREATE
 productsRouter.post('/', async (request, response) => {
   const content = request.body
+  const token = getTokenFrom(request)
+  const decodedToken = jwt.verify(token, process.env.SECRET)
 
-  const user = await User.findById(content.userId)
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+  const user = await User.findById(decodedToken.id)
 
   // Save new product
   const product = new Product({
