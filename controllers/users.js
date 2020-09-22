@@ -30,6 +30,7 @@ usersRouter.post('/', async (request, response) => {
 
   const savedUser = await user.save()
 
+  delete savedUser.passwordHash
   response.json(savedUser)
 })
 
