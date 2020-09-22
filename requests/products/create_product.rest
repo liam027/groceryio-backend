@@ -1,9 +1,10 @@
 POST http://localhost:3001/api/products
 content-type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjVmNmEwMmE5ZWIwYWZlNDBiYzQ1MzMwYSIsImlhdCI6MTYwMDc4NTI0OH0.QEvDIGm5bfP9ASSYMGZiE7DusBEZ_2KJI9sd2EoSyP0
 
   {
-    "name": "cherries",
+    "name": "peaches",
     "category": "frozen",
     "quantity": 6,
-    "userId": "5f69028eaee6d82686a4f5f7"
+    "userId": "5f6a02a9eb0afe40bc45330a"
   }
