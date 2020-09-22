@@ -4,5 +4,6 @@ content-type: application/json
   {
     "name": "cherries",
     "category": "frozen",
-    "quantity": 6
+    "quantity": 6,
+    "userId": "5f69028eaee6d82686a4f5f7"
   }
