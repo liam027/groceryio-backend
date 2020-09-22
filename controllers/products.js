@@ -38,7 +38,7 @@ productsRouter.post('/', async (request, response) => {
   const savedProduct = await product.save()
 
   // Save new product ID to user's products
-  user.notes = user.notes.concat(savedProduct._id)
+  user.products = user.products.concat(savedProduct._id)
   await user.save()
 
   response.json(savedProduct)
@@ -48,7 +48,7 @@ productsRouter.post('/', async (request, response) => {
 productsRouter.put('/:id', async (request, response) => {
   const content = request.body
 
-  const note = {
+  const product = {
     name: content.name,
     category: content.category,
     quantity: content.quantity
@@ -56,7 +56,7 @@ productsRouter.put('/:id', async (request, response) => {
 
   // enable validations during update, Mongoose default is OFF
   const opts = { runValidators: true, new: true, context: 'query' }
-  const result = await Product.findByIdAndUpdate(request.params.id, note, opts)
+  const result = await Product.findByIdAndUpdate(request.params.id, product, opts)
   logger.info('Record successfully updated. ID: ', result)
   response.json(result)
 })

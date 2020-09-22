@@ -26,8 +26,8 @@ const Product = mongoose.model('Product', productSchema)
 // })
 
 Product.find({}).then(result => {
-  result.forEach(note => {
-    console.log(note)
+  result.forEach(product => {
+    console.log(product)
   })
   mongoose.connection.close()
 })

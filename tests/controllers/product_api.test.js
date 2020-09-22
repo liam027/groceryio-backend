@@ -39,7 +39,7 @@ describe('when there are initially some products saved', () => {
   })
 })
 
-describe('viewing a specific note', () => {
+describe('viewing a specific product', () => {
 
   test('a valid product ID can be viewed', async () => {
     const productsAtStart = await helper.productsInDb()
@@ -60,12 +60,12 @@ describe('viewing a specific note', () => {
     const validNonexistingId = await helper.nonExistingId()
 
     await api
-      .get(`/api/notes/${validNonexistingId}`)
+      .get(`/api/products/${validNonexistingId}`)
       .expect(404)
   })
 })
 
-describe('addition of a new note', () => {
+describe('addition of a new product', () => {
 
   test('a valid product can be added', async () => {
     const testProduct = {
@@ -108,7 +108,7 @@ describe('addition of a new note', () => {
 })
 
 
-describe('deletion of a note', () => {
+describe('deletion of a product', () => {
   test('a product can be deleted', async () => {
     const productsAtStart = await helper.productsInDb()
     const productToDelete = productsAtStart[0]

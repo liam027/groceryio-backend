@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  notes: [
+  products: [
     {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Product'
