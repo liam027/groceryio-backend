@@ -6,6 +6,7 @@ const cors = require('cors')
 
 const productsRouter = require('./controllers/products')
 const usersRouter = require('./controllers/users')
+const loginRouter = require('./controllers/login')
 
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
@@ -31,6 +32,7 @@ app.use(middleware.requestLogger)
 
 app.use('/api/products', productsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 
 app.use(middleware.unknownEndpoint)
