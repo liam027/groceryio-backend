@@ -46,14 +46,17 @@ describe('creating a new user', () => {
       password: 'password'
     }
 
-    await api
+    const result = await api
       .post('/api/users')
       .send(testUser)
       .expect(400)
+      .expect('Content-Type', /application\/json/)
 
+    expect(result.body.error).toContain('`username` to be unique')
     // No user has been added
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(helper.initialUsers.length)
+
   })
 
   test('duplicate emails are not permitted', async () => {
@@ -63,11 +66,13 @@ describe('creating a new user', () => {
       password: 'password'
     }
 
-    await api
+    const result = await api
       .post('/api/users')
       .send(testUser)
       .expect(400)
+      .expect('Content-Type', /application\/json/)
 
+    expect(result.body.error).toContain('`email` to be unique')
     // No user has been added
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(helper.initialUsers.length)
