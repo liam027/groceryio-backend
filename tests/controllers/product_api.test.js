@@ -68,6 +68,8 @@ describe('viewing a specific product', () => {
 describe('addition of a new product', () => {
 
   test('a valid product can be added', async () => {
+    const token = await helper.getUserToken()
+
     const testProduct = {
       name: 'async',
       category: 'frozen',
@@ -76,6 +78,7 @@ describe('addition of a new product', () => {
 
     await api
       .post('/api/products')
+      .set('Authorization', `bearer ${token}`)
       .send(testProduct)
       .expect(200)
       .expect('Content-Type', /application\/json/)
@@ -90,6 +93,8 @@ describe('addition of a new product', () => {
   })
 
   test('product without name is not added', async () => {
+    const token = await helper.getUserToken()
+
     const testProduct = {
       name: '',
       category: 'frozen',
@@ -98,6 +103,7 @@ describe('addition of a new product', () => {
 
     await api
       .post('/api/products')
+      .set('Authorization', `bearer ${token}`)
       .send(testProduct)
       .expect(400)
 
