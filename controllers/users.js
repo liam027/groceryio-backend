@@ -4,7 +4,13 @@ const usersRouter = require('express').Router()
 
 // INDEX
 usersRouter.get('/', async (request, response) => {
-  const users = await User.find({})
+  const users = await User.find({}).populate('products')
+  response.json(users)
+})
+
+// SHOW
+usersRouter.get('/:id', async (request, response) => {
+  const users = await User.findById(request.params.id)
   response.json(users)
 })
 

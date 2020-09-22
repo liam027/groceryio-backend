@@ -5,7 +5,10 @@ const User = require('../models/user')
 
 // INDEX
 productsRouter.get('/', async (request, response) => {
-  const products = await Product.find({})
+  const products = await Product
+    .find({})
+    .populate('user', { username: 1, email: 1 })
+
   response.json(products)
 })
 
