@@ -16,6 +16,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  created_at: {
+    type: Date,
+    required: true
+  },
   products: [
     {
       type: mongoose.Schema.Types.ObjectId,
