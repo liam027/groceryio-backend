@@ -1,6 +1,15 @@
 const Product = require('../models/product')
 const User = require('../models/user')
 
+const initialUsers = [
+  {
+    'username': 'root',
+    'email': 'root@root.com',
+    'passwordHash': '$2b$10$MBjvYE4yDeHBfmpv332twesH7tbt0/ozXwEfzbke79HpfChIRpXjW',
+    'created_at': new Date()
+  }
+]
+
 const initialProducts = [
   {
     'name': 'turkey',
@@ -42,6 +51,7 @@ const usersInDb = async () => {
 
 module.exports = {
   initialProducts,
+  initialUsers,
   nonExistingId,
   productsInDb,
   usersInDb
