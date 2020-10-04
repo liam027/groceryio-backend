@@ -8,6 +8,11 @@ const productsRouter = require('./controllers/products')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
 
+if (process.env.NODE_ENV === 'test') {
+  const testingRouter = require('./controllers/testing')
+  app.use('/api/testing', testingRouter)
+}
+
 const middleware = require('./utils/middleware')
 const logger = require('./utils/logger')
 const mongoose = require('mongoose')
@@ -18,7 +23,7 @@ mongoose.set('useCreateIndex', true)
 logger.info('connecting to', config.MONGODB_URI)
 
 mongoose.connect(config.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then( () => {
+  .then(() => {
     logger.info('connected to MongoDB')
   })
   .catch((error) => {
