@@ -1,11 +1,16 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
+const Product = require('../models/product')
 const usersRouter = require('express').Router()
 
-// SHOW
+// GET
 usersRouter.get('/:id', async (request, response) => {
-  const users = await User.findById(request.params.id)
-  response.json(users)
+  const user_id = request.params.id
+
+  const products = await Product
+    .find({user: user_id})
+
+  response.json(products)
 })
 
 // CREATE
