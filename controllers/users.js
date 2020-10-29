@@ -2,12 +2,6 @@ const bcrypt = require('bcrypt')
 const User = require('../models/user')
 const usersRouter = require('express').Router()
 
-// INDEX
-usersRouter.get('/', async (request, response) => {
-  const users = await User.find({}).populate('products')
-  response.json(users)
-})
-
 // SHOW
 usersRouter.get('/:id', async (request, response) => {
   const users = await User.findById(request.params.id)
@@ -23,9 +17,8 @@ usersRouter.post('/', async (request, response) => {
 
   const user = new User( {
     username: body.username,
-    email: body.email,
-    created_at: new Date(),
-    passwordHash: passwordHash
+    passwordHash: passwordHash,
+    created_at: new Date()
   })
 
   const savedUser = await user.save()
