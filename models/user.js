@@ -7,11 +7,6 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true
-  },
   passwordHash: {
     type: String,
     required: true,
@@ -19,13 +14,7 @@ const userSchema = new mongoose.Schema({
   created_at: {
     type: Date,
     required: true
-  },
-  products: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'Product'
-    }
-  ]
+  }
 })
 userSchema.plugin(uniqueValidator)
 
