@@ -14,7 +14,13 @@ const userSchema = new mongoose.Schema({
   created_at: {
     type: Date,
     required: true
-  }
+  },
+  products: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product'
+    }
+  ]
 })
 userSchema.plugin(uniqueValidator)
 
