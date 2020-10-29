@@ -11,27 +11,6 @@ const getTokenFrom = request => {
   }
 }
 
-// INDEX
-productsRouter.get('/', async (request, response) => {
-  const products = await Product
-    .find({})
-    .populate('user', { username: 1, email: 1 })
-
-  response.json(products)
-})
-
-// SHOW
-productsRouter.get('/:id', async (request, response) => {
-  const product = await Product.findById(request.params.id)
-  if (product) {
-    response.json(product)
-  }
-  else {
-    response.status(404).end()
-  }
-})
-
-
 // CREATE
 productsRouter.post('/', async (request, response) => {
   const content = request.body
