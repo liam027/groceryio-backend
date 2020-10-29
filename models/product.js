@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const uniqueValidator = require('mongoose-unique-validator')
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -25,7 +24,6 @@ const productSchema = new mongoose.Schema({
     ref: 'User'
   }
 })
-productSchema.plugin(uniqueValidator)
 
 // Transform _id to id and remove MongoDB default _v field
 productSchema.set('toJSON', {
