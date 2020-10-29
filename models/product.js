@@ -4,7 +4,6 @@ const uniqueValidator = require('mongoose-unique-validator')
 const productSchema = new mongoose.Schema({
   name: {
     type: String,
-    unique: true,
     required: true
   },
   created_at: {
